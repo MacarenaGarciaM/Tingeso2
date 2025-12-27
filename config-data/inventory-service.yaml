@@ -1,0 +1,15 @@
+server:
+  port: 8091
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/inventoryms
+    username: postgres
+    password: 1234
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://eureka-server-service:8761/eureka/
