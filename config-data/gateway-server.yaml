@@ -22,9 +22,9 @@ spring:
             allowedHeaders: "*"
       routes:
         - id: inventory-service
-          uri: lb://ms-orders
+          uri: lb://inventory-service
           predicates:
-            - Path=/orders/**
+            - Path=/tool/**
 #        - id: ms-products
 #          uri: lb://ms-products
 #          predicates:
