@@ -64,4 +64,29 @@ public class ToolController {
     public ResponseEntity<List<ToolEntity>> listByState(@RequestParam String state) {
         return ResponseEntity.ok(toolService.listByState(state));
     }
+
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getToolById(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(toolService.getById(id));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/ids")
+    public ResponseEntity<?> getToolIds(
+            @RequestParam String name,
+            @RequestParam String category,
+            @RequestParam String state
+    ) {
+        try {
+            return ResponseEntity.ok(toolService.getIdsByNameCategoryAndState(name, category, state));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
 }

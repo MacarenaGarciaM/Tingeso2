@@ -176,6 +176,13 @@ public class ToolService {
         return new ArrayList<>(unique.values());
     }
 
+    public List<Long> getIdsByNameCategoryAndState(String name, String category, String state) {
+        if (name == null || name.isBlank()) throw new IllegalArgumentException("name is required");
+        if (category == null || category.isBlank()) throw new IllegalArgumentException("category is required");
+        if (state == null || state.isBlank()) throw new IllegalArgumentException("state is required");
+        return toolRepository.findIdsByNameCategoryAndState(name.trim(), category.trim(), state.trim());
+    }
+
 
     //Kardex HTTP mall (map)
     private void registerKardexMovement(Long toolId, String rutUser, String type, int stock) {
@@ -192,6 +199,11 @@ public class ToolService {
                 body,
                 Void.class
         );
+    }
+
+    public ToolEntity getById(Long id) {
+        return toolRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Tool not found: " + id));
     }
 
     //Aux class
