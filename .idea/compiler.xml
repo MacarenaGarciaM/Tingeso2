@@ -8,6 +8,8 @@
         <outputRelativeToContentRoot value="true" />
         <module name="gateway-server" />
         <module name="config-server" />
+        <module name="setting-service" />
+        <module name="client-service" />
       </profile>
       <profile name="Annotation profile for inventory-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -27,7 +29,6 @@
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
         </processorPath>
-        <module name="client-service" />
         <module name="loan-service" />
       </profile>
     </annotationProcessing>
@@ -40,6 +41,7 @@
       <module name="gateway-server" options="-parameters" />
       <module name="inventory-service" options="-parameters" />
       <module name="loan-service" options="-parameters" />
+      <module name="setting-service" options="-parameters" />
     </option>
   </component>
 </project>
