@@ -64,3 +64,9 @@ spring:
           uri: lb://kardex-service
           predicates:
             - Path=/kardex/**
+
+        - id: test-route
+          uri: http://httpbin.org
+          predicates:
+            - Path=/__test/**
+
