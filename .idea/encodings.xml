@@ -12,6 +12,7 @@
     <file url="file://$PROJECT_DIR$/loan-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/report-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/report-services/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/role-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/setting-service/src/main/java" charset="UTF-8" />
   </component>
 </project>

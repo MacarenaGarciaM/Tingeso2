@@ -1,31 +1,66 @@
 server:
   port: 8080
+
 eureka:
   client:
     fetch-registry: true
     register-with-eureka: true
     service-url:
       defaultZone: http://eureka-server-service:8761/eureka/
+
 spring:
   cloud:
     gateway:
       discovery:
         locator:
           enabled: true
-        default-filters:
-          - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
+
+      # OJO: default-filters va aquí (no dentro de discovery)
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
+
       globalcors:
         cors-configurations:
           '[/**]':
-            allowedOrigins: '*'
-            allowedMethods: "*"
-            allowedHeaders: "*"
+            allowedOrigins:
+              - "http://localhost:5173"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - PATCH
+              - DELETE
+              - OPTIONS
+            allowedHeaders:
+              - "*"
+
       routes:
+        # INVENTORY
         - id: inventory-service
           uri: lb://inventory-service
           predicates:
             - Path=/tool/**
-#        - id: ms-products
-#          uri: lb://ms-products
-#          predicates:
-#            - Path=/products/**
+
+        # LOAN (todo lo que empiece con /loan/)
+        - id: loan-service
+          uri: lb://loan-service
+          predicates:
+            - Path=/loan/**
+
+        # CLIENT (users)
+        - id: client-service-users
+          uri: lb://client-service
+          predicates:
+            - Path=/users/**
+
+        # SETTINGS
+        - id: setting-service
+          uri: lb://setting-service
+          predicates:
+            - Path=/settings/**
+
+        # KARDEX
+        - id: kardex-service
+          uri: lb://kardex-service
+          predicates:
+            - Path=/kardex/**
