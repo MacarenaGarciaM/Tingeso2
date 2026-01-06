@@ -22,13 +22,14 @@
         <module name="eureka-server" />
         <module name="inventory-service" />
       </profile>
-      <profile name="Annotation profile for client-service" enabled="true">
+      <profile name="Annotation profile for kardex-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
         </processorPath>
+        <module name="kardex-service" />
         <module name="loan-service" />
       </profile>
     </annotationProcessing>
@@ -40,6 +41,7 @@
       <module name="eureka-server" options="-parameters" />
       <module name="gateway-server" options="-parameters" />
       <module name="inventory-service" options="-parameters" />
+      <module name="kardex-service" options="-parameters" />
       <module name="loan-service" options="-parameters" />
       <module name="setting-service" options="-parameters" />
     </option>
