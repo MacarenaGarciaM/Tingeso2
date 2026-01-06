@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="gateway-server" />
         <module name="config-server" />
+        <module name="kardex-service" />
         <module name="setting-service" />
         <module name="client-service" />
       </profile>
@@ -29,10 +30,12 @@
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
         </processorPath>
-        <module name="kardex-service" />
         <module name="loan-service" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="report-services" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
@@ -43,6 +46,7 @@
       <module name="inventory-service" options="-parameters" />
       <module name="kardex-service" options="-parameters" />
       <module name="loan-service" options="-parameters" />
+      <module name="report-services" options="-parameters" />
       <module name="setting-service" options="-parameters" />
     </option>
   </component>
