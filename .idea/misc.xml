@@ -15,6 +15,7 @@
         <option value="$PROJECT_DIR$/setting-service/pom.xml" />
         <option value="$PROJECT_DIR$/kardex-service/pom.xml" />
         <option value="$PROJECT_DIR$/report-services/pom.xml" />
+        <option value="$PROJECT_DIR$/report-service/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

@@ -1,0 +1,26 @@
+server:
+  port: 0
+
+spring:
+  application:
+    name: role-service
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KC_ISSUER:http://localhost:9090/realms/sisgr-realm}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+
+keycloak:
+  server-url: ${KC_URL:http://localhost:9090}
+  realm: ${KC_REALM:sisgr-realm}
+
+  admin-client-id: ${KC_ADMIN_CLIENT_ID:admin-cli}
+  admin-username: ${KC_ADMIN_USER:admin}
+  admin-password: ${KC_ADMIN_PASS:admin}
+

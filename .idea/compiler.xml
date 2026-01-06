@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="gateway-server" />
         <module name="config-server" />
+        <module name="report-service" />
         <module name="kardex-service" />
         <module name="setting-service" />
         <module name="client-service" />
@@ -46,6 +47,7 @@
       <module name="inventory-service" options="-parameters" />
       <module name="kardex-service" options="-parameters" />
       <module name="loan-service" options="-parameters" />
+      <module name="report-service" options="-parameters" />
       <module name="report-services" options="-parameters" />
       <module name="setting-service" options="-parameters" />
     </option>

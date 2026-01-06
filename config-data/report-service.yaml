@@ -6,7 +6,7 @@ spring:
     name: report-service
 
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:5432/loanms
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/reportms
     username: postgres
     password: 1234
 
@@ -17,7 +17,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        
+
 eureka:
   instance:
     preferIpAddress: true
