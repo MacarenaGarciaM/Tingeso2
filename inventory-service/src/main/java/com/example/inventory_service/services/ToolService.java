@@ -20,13 +20,13 @@ public class ToolService {
     @Autowired
     private RestTemplate restTemplate;
 
-    //Service name register in Eureka
+    // Service name registered in Eureka
     private static final String KARDEX_SERVICE_URL = "http://kardex-service/kardex/movements";
 
     private static final List<String> validState =
             Arrays.asList("Disponible", "Prestada", "En reparación", "Dada de baja");
 
-    //Create Tool
+    // Create Tool
     public ToolEntity saveTool(ToolEntity tool, String rutUser) {
 
         if (tool.getName() == null || tool.getName().isBlank())
@@ -70,10 +70,11 @@ public class ToolService {
             savedTool = toolRepository.save(newTool);
         }
 
-
-        //Register kardex via HTTP
+        // Register kardex via HTTP (snapshot)
         registerKardexMovement(
                 savedTool.getId(),
+                savedTool.getName(),
+                savedTool.getCategory(),
                 rutUser,
                 "Ingreso",
                 tool.getAmount()
@@ -82,13 +83,16 @@ public class ToolService {
         return savedTool;
     }
 
-    //Update tool
+    // Update tool
     public ToolEntity updateTool(Long id, String newState, Integer newAmount,
                                  Integer newRepositionValue, String rutUser) {
 
         ToolEntity tool = toolRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Tool not found"));
 
+        // ==========================
+        // 1) MOVE STATE (bucket logic)
+        // ==========================
         if (newState != null) {
 
             if (!validState.contains(newState))
@@ -97,7 +101,7 @@ public class ToolService {
             if (tool.getAmount() <= 0)
                 throw new IllegalArgumentException("No stock available");
 
-            // Reduce origin
+            // Reduce origin bucket by 1
             tool.setAmount(tool.getAmount() - 1);
             toolRepository.save(tool);
 
@@ -121,8 +125,11 @@ public class ToolService {
             target.setAmount(target.getAmount() + 1);
             ToolEntity savedTarget = toolRepository.save(target);
 
+            // Kardex movement for the DESTINATION bucket (snapshot = name/category)
             registerKardexMovement(
                     savedTarget.getId(),
+                    savedTarget.getName(),
+                    savedTarget.getCategory(),
                     rutUser,
                     "Cambio de estado: " + newState,
                     savedTarget.getAmount()
@@ -131,17 +138,40 @@ public class ToolService {
             return savedTarget;
         }
 
+        // ==========================
+        // 2) EDIT ATTRIBUTES (same row)
+        // ==========================
+        boolean changed = false;
+
         if (newAmount != null) {
             if (newAmount < 0) throw new IllegalArgumentException("Amount cannot be negative");
             tool.setAmount(newAmount);
+            changed = true;
         }
 
         if (newRepositionValue != null) {
             if (newRepositionValue < 0) throw new IllegalArgumentException("Reposition value cannot be negative");
             tool.setRepositionValue(newRepositionValue);
+            changed = true;
         }
 
-        return toolRepository.save(tool);
+        ToolEntity saved = toolRepository.save(tool);
+
+        // ✅ Opcional (recomendado): registrar cambios de edición en Kardex también
+        // Si NO quieres kardex cuando solo se edita amount/repositionValue, comenta este bloque.
+        if (changed) {
+            String type = "Actualización herramienta";
+            registerKardexMovement(
+                    saved.getId(),
+                    saved.getName(),
+                    saved.getCategory(),
+                    rutUser,
+                    type,
+                    saved.getAmount()
+            );
+        }
+
+        return saved;
     }
 
     public ToolEntity getToolByName(String name) {
@@ -183,12 +213,18 @@ public class ToolService {
         return toolRepository.findIdsByNameCategoryAndState(name.trim(), category.trim(), state.trim());
     }
 
-
-    //Kardex HTTP mall (map)
-    private void registerKardexMovement(Long toolId, String rutUser, String type, int stock) {
-
+    private void registerKardexMovement(
+            Long toolId,
+            String toolNameSnapshot,
+            String toolCategorySnapshot,
+            String rutUser,
+            String type,
+            int stock
+    ) {
         Map<String, Object> body = new HashMap<>();
         body.put("toolId", toolId);
+        body.put("toolNameSnapshot", toolNameSnapshot);
+        body.put("toolCategorySnapshot", toolCategorySnapshot);
         body.put("rutUser", rutUser);
         body.put("type", type);
         body.put("movementDate", LocalDate.now());
@@ -206,7 +242,7 @@ public class ToolService {
                 .orElseThrow(() -> new IllegalArgumentException("Tool not found: " + id));
     }
 
-    //Aux class
+    // Aux class
     @Data
     @AllArgsConstructor
     public static class NameCategory {
