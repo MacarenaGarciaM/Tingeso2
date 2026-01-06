@@ -1,10 +1,9 @@
 import Keycloak from "keycloak-js";
 
-console.log("[keycloak] creando instancia");
 const keycloak = new Keycloak({
-  url: "http://localhost:9090",
-  realm: "sisgr-realm",
-  clientId: "sisgr-frontend",
+  url: import.meta.env.VITE_KEYCLOAK_URL,
+  realm: import.meta.env.VITE_KEYCLOAK_REALM,
+  clientId: import.meta.env.VITE_KEYCLOAK_CLIENT_ID,
 });
 
 export default keycloak;

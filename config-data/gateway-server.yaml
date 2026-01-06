@@ -65,8 +65,10 @@ spring:
           predicates:
             - Path=/kardex/**
 
-        - id: test-route
-          uri: http://httpbin.org
+
+        - id: role-service
+          uri: lb://role-service
           predicates:
-            - Path=/__test/**
+            - Path=/auth/**,/admin/**
+
 

@@ -5,10 +5,19 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:8080",
 });
 
-// agrega el Bearer token automáticamente
-api.interceptors.request.use((config) => {
-  const token = keycloak?.token;
-  if (token) config.headers.Authorization = `Bearer ${token}`;
+// agrega el Bearer token automáticamente (y refresca si está por expirar)
+api.interceptors.request.use(async (config) => {
+  try {
+    if (keycloak?.token) {
+      // refresca si expira en < 30s
+      await keycloak.updateToken(30);
+      config.headers.Authorization = `Bearer ${keycloak.token}`;
+    }
+  } catch (e) {
+    // si no pudo refrescar, forzar login
+    // (opcional: comenta esto si te molesta que redirija)
+    keycloak.login();
+  }
   return config;
 });
 
