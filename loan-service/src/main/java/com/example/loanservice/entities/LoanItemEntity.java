@@ -37,7 +37,4 @@ public class LoanItemEntity {
     private String toolNameSnapshot;
 
 
-
-
-
 }

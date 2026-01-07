@@ -183,8 +183,19 @@ const onSubmit = async (e) => { // maneja el envío del formulario
   return (
     <Box sx={{ p: 3, maxWidth: 900, mx: "auto" }} component="form" onSubmit={onSubmit}>
       <Typography variant="h5" sx={{ mb: 2 }}>Devolución de herramientas</Typography>
-      {err && <Alert severity="error" sx={{ mb: 2 }}>{String(err)}</Alert>}
+      {/* Si hay un error técnico del servidor */}
+{err && (
+  <Alert severity="error" sx={{ mb: 2 }}>
+    {typeof err === "string" ? err : "Ocurrió un error inesperado al cargar los datos."}
+  </Alert>
+)}
 
+{/* Mensaje informativo cuando no hay datos, pero no es un error de red */}
+{!loading && !err && loans.length === 0 && (
+  <Alert severity="info" sx={{ mb: 2 }}>
+    {isAdmin ? "No se encontraron préstamos activos en el sistema." : "Actualmente no tienes préstamos pendientes de devolución."}
+  </Alert>
+)}
       <Paper sx={{ p: 2, mb: 2 }}>
         <Stack spacing={2}>
           {isAdmin && (
@@ -208,10 +219,11 @@ const onSubmit = async (e) => { // maneja el envío del formulario
             value={loanId}
             onChange={e => setLoanId(e.target.value)}
             fullWidth
+            // Ajuste aquí:
             helperText={
-              err
-                ? `Error cargando préstamos: ${String(err)}`
-                : (!loans.length ? (isAdmin ? "No hay préstamos activos" : "No tienes préstamos activos") : "")
+              err 
+                ? "Error al conectar con el servicio de préstamos" 
+                : (!loans.length ? (isAdmin ? "Sin registros en el sistema" : "No tienes préstamos para devolver") : "Selecciona el folio del préstamo")
             }
           >
             {loans.map(l => (
