@@ -5,6 +5,22 @@ import { Box, Stack, TextField, Button, Snackbar, Alert, Typography } from "@mui
 
 const CLP = new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 });
 
+const asText = (v) => {
+  if (v == null) return "";
+  if (typeof v === "string") return v;
+  if (typeof v === "number" || typeof v === "boolean") return String(v);
+  // axios a veces manda objeto o array
+  try { return JSON.stringify(v); } catch { return String(v); }
+};
+
+const axiosMsg = (e) =>
+  asText(e?.response?.data?.message ??
+        e?.response?.data?.error ??
+        e?.response?.data ??
+        e?.message ??
+        "Error");
+
+
 export default function Home() {
   const { keycloak, initialized } = useKeycloak();
   const roles = keycloak?.tokenParsed?.realm_access?.roles || [];
@@ -34,7 +50,7 @@ export default function Home() {
       } catch (e) {
         setToast({
           open: true,
-          msg: e?.response?.data || e.message,
+          msg: axiosMsg(e),
           sev: "error",
         });
       }
@@ -91,7 +107,7 @@ export default function Home() {
         onClose={() => setToast({ ...toast, open:false })}
       >
         <Alert onClose={() => setToast({ ...toast, open:false })} severity={toast.sev}>
-          {toast.msg}
+          {asText(toast.msg)}
         </Alert>
       </Snackbar>
     </Box>

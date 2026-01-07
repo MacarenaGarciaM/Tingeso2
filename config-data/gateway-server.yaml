@@ -16,67 +16,64 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          # EJEMPLO local
           issuer-uri: http://localhost:9090/realms/sisgr-realm
 
-  spring:
-    cloud:
-      gateway:
-        server:
-          webflux:
-            discovery:
-              locator:
-                enabled: true
+  cloud:
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: true
 
-            default-filters:
-              - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
+          default-filters:
+            - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
 
-            globalcors:
-              cors-configurations:
-                '[/**]':
-                  allowedOrigins:
-                    - "http://localhost:5173"
-                  allowedMethods:
-                    - GET
-                    - POST
-                    - PUT
-                    - PATCH
-                    - DELETE
-                    - OPTIONS
-                  allowedHeaders:
-                    - Authorization
-                    - Content-Type
-                  exposedHeaders:
-                    - Authorization
+          globalcors:
+            cors-configurations:
+              '[/**]':
+                allowedOrigins:
+                  - "http://localhost:5173"
+                allowedMethods:
+                  - GET
+                  - POST
+                  - PUT
+                  - PATCH
+                  - DELETE
+                  - OPTIONS
+                allowedHeaders:
+                  - Authorization
+                  - Content-Type
+                exposedHeaders:
+                  - Authorization
 
+          routes:
+            - id: inventory-service
+              uri: lb://inventory-service
+              predicates:
+                - Path=/tool/**
 
-      routes:
-        - id: inventory-service
-          uri: lb://inventory-service
-          predicates:
-            - Path=/tool/**
+            - id: loan-service
+              uri: lb://loan-service
+              predicates:
+                - Path=/loan/**
 
-        - id: loan-service
-          uri: lb://loan-service
-          predicates:
-            - Path=/loan/**
+            - id: client-service-users
+              uri: lb://client-service
+              predicates:
+                - Path=/users/**
 
-        - id: client-service-users
-          uri: lb://client-service
-          predicates:
-            - Path=/users/**
+            - id: setting-service
+              uri: lb://setting-service
+              predicates:
+                - Path=/settings/**
 
-        - id: setting-service
-          uri: lb://setting-service
-          predicates:
-            - Path=/settings/**
+            - id: kardex-service
+              uri: lb://kardex-service
+              predicates:
+                - Path=/kardex/**
 
-        - id: kardex-service
-          uri: lb://kardex-service
-          predicates:
-            - Path=/kardex/**
-
-        - id: role-service
-          uri: lb://role-service
-          predicates:
-            - Path=/auth/**,/admin/**
+            - id: role-service
+              uri: lb://role-service
+              predicates:
+                - Path=/auth/**,/admin/**
