@@ -16,7 +16,7 @@ public interface KardexRepository extends JpaRepository<KardexEntity, Long> {
       from KardexEntity k
       where (:toolId is null or k.toolId = :toolId)
         and (:rutUser is null or k.rutUser = :rutUser)
-        and (:typeLower = '' or lower(k.type) = :typeLower)
+        and (:typeLower = '' or lower(k.type) like concat('%', :typeLower, '%'))
         and (:hasFrom = false or k.movementDate >= :fromDate)
         and (:hasTo   = false or k.movementDate <= :toDate)
         and (:namePat = '' or lower(k.toolNameSnapshot) like :namePat)

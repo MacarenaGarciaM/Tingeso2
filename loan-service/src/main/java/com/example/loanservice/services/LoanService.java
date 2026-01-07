@@ -281,11 +281,14 @@ public class LoanService {
     // =========================
     // Helpers
     // =========================
+
     private int calculateLoanTotal(LocalDate reservationDate, LocalDate returnDate) {
+        int daily = fetchDailyRateOrDefault();     // ✅ dinámico
         long days = ChronoUnit.DAYS.between(reservationDate, returnDate);
         if (days < 1) days = 1;
-        return (int) (days * (long) dailyRentPrice);
+        return (int) (days * (long) daily);
     }
+
 
     // =========================
     // Inventory calls (SIN DTO)
@@ -392,4 +395,19 @@ public class LoanService {
         public Integer quantity;
         public Item() {}
     }
+
+    @Value("${services.setting.base-url:http://setting-service}")
+    private String settingBaseUrl;
+
+    private int fetchDailyRateOrDefault() {
+        try {
+            String url = settingBaseUrl + "/settings/daily-rate";
+            ResponseEntity<Map> resp = restTemplate.getForEntity(url, Map.class);
+            Object v = resp.getBody() != null ? resp.getBody().get("value") : null;
+            return asInt(v, 2500);
+        } catch (Exception e) {
+            return 2500;
+        }
+    }
+
 }

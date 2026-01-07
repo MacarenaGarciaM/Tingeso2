@@ -20,7 +20,7 @@ public class SettingService {
     public int getDailyRentPrice() {
         return repo.findById(daily_key)
                 .map(s -> {
-                    try { return Integer.parseInt(s.getPrice()); }
+                    try { return Integer.parseInt(s.getText()); }
                     catch (Exception e) { return default_price; }
                 })
                 .orElse(default_price);

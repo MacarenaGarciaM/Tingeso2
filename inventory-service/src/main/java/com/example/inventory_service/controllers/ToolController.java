@@ -30,7 +30,7 @@ public class ToolController {
     }
 
     // update (move state and/or edit), via query params
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateTool(@PathVariable Long id,
                                         @RequestParam(required = false) String state,

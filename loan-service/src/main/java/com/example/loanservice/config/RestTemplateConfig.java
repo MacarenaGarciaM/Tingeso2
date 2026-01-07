@@ -15,17 +15,16 @@ public class RestTemplateConfig {
     @LoadBalanced
     public RestTemplate restTemplate() {
         RestTemplate rt = new RestTemplate();
-        rt.getInterceptors().add((request, body, execution) -> {
 
+        rt.getInterceptors().add((request, body, execution) -> {
             var auth = SecurityContextHolder.getContext().getAuthentication();
             if (auth instanceof JwtAuthenticationToken jwtAuth) {
                 String token = jwtAuth.getToken().getTokenValue();
                 request.getHeaders().set(HttpHeaders.AUTHORIZATION, "Bearer " + token);
             }
-
             return execution.execute(request, body);
         });
+
         return rt;
     }
 }
-

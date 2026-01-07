@@ -17,19 +17,20 @@ public interface LoanRepository extends JpaRepository<LoanEntity, Long> {
 
     long countByRutUserAndLateReturnDateIsNull(String rutUser);
 
-    @EntityGraph(attributePaths = {"items", "items.tool"})
+
+    @EntityGraph(attributePaths = {"items"})
     List<LoanEntity> findByLateReturnDateIsNull();
 
-    @EntityGraph(attributePaths = {"items", "items.tool"})
+    @EntityGraph(attributePaths = {"items"})
     List<LoanEntity> findByRutUserAndLateReturnDateIsNull(String rutUser);
 
-    @EntityGraph(attributePaths = {"items", "items.tool"})
+    @EntityGraph(attributePaths = {"items"})
     Page<LoanEntity> findPageByRutUser(String rutUser, Pageable pageable);
 
-    @EntityGraph(attributePaths = {"items", "items.tool"})
+    @EntityGraph(attributePaths = {"items"})
     Page<LoanEntity> findByLateReturnDateIsNullAndReturnDateBefore(LocalDate today, Pageable pageable);
 
-    @EntityGraph(attributePaths = {"items", "items.tool"})
+    @EntityGraph(attributePaths = {"items"})
     Page<LoanEntity> findByRutUserAndLateReturnDateIsNullAndReturnDateBefore(
             String rutUser, LocalDate today, Pageable pageable);
 
@@ -51,7 +52,7 @@ public interface LoanRepository extends JpaRepository<LoanEntity, Long> {
     );
 
 
-    @EntityGraph(attributePaths = {"items","items.tool"})
+    @EntityGraph(attributePaths = {"items"})
     @Query("""
   select l
   from LoanEntity l
@@ -80,6 +81,6 @@ public interface LoanRepository extends JpaRepository<LoanEntity, Long> {
 
 
     @Override
-    @EntityGraph(attributePaths = {"items", "items.tool"})
+    @EntityGraph(attributePaths = {"items"})
     Optional<LoanEntity> findById(Long id);
 }

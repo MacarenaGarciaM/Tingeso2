@@ -52,7 +52,7 @@ export default function LoanReturn() {
         if (list.length) {
           setLoanId(String(list[0].id));
           const initial = {};
-          list[0].items?.forEach(li => { initial[li.tool.id] = "ok"; });
+          list[0].items?.forEach(li => { initial[li.toolId] = "ok"; });
           setStates(initial);
         } else {
           setLoanId("");
@@ -77,8 +77,8 @@ export default function LoanReturn() {
     const initialStates = {};
     const initialCosts  = {};
     currentLoan.items?.forEach(li => {
-      initialStates[li.tool.id] = "ok";
-      initialCosts[li.tool.id]  = 0;
+      initialStates[li.toolId] = "ok";
+      initialCosts[li.toolId]  = 0;
     });
     setStates(initialStates);
     setRepairCosts(initialCosts);
@@ -256,25 +256,28 @@ const onSubmit = async (e) => { // maneja el envío del formulario
 
     <Stack spacing={1}>
       {currentLoan.items?.map((li) => {
-  const t = li.tool;
-  const st = states[t.id] || "ok";
+  const toolId = Number(li.toolId);
+  const st = states[toolId] || "ok";
 
-  const idOk  = `tool-${t.id}-ok`;
-  const idDam = `tool-${t.id}-damaged`;
-  const idIrr = `tool-${t.id}-irreparable`;
+  const idOk  = `tool-${toolId}-ok`;
+  const idDam = `tool-${toolId}-damaged`;
+  const idIrr = `tool-${toolId}-irreparable`;
 
   return (
-    <Box key={t.id} /* ... */>
+    <Box
+      key={toolId}
+      sx={{ display: "flex", gap: 2, alignItems: "center", flexWrap: "wrap" }}
+    >
       <Box sx={{ minWidth: 320 }}>
-        <b>{t.name}</b> ({t.category}) — ID: {t.id}
+        <b>{li.toolNameSnapshot ?? "Herramienta"}</b> — ID: {toolId}
       </Box>
 
       <FormControlLabel
         control={
           <Checkbox
-            id={idOk}                         // 👈 asegura el match label ↔ input
+            id={idOk}
             checked={st === "ok"}
-            onChange={() => onToggle(t.id, "ok")}
+            onChange={() => onToggle(toolId, "ok")}
           />
         }
         label="OK"
@@ -285,29 +288,30 @@ const onSubmit = async (e) => { // maneja el envío del formulario
           <Checkbox
             id={idDam}
             checked={st === "damaged"}
-            onChange={() => onToggle(t.id, "damaged")}
+            onChange={() => onToggle(toolId, "damaged")}
           />
         }
         label="Dañada"
       />
+
       {st === "damaged" && (
-            <TextField
-      size="small"
-      type="number"
-      inputProps={{ min: 0 }}
-      sx={{ width: 160 }}
-      label="Costo reparación"
-      value={repairCosts[t.id] ?? 0}
-      onChange={(e) => onChangeRepair(t.id, e.target.value)}
-    />
-  )}
+        <TextField
+          size="small"
+          type="number"
+          inputProps={{ min: 0 }}
+          sx={{ width: 160 }}
+          label="Costo reparación"
+          value={repairCosts[toolId] ?? 0}
+          onChange={(e) => onChangeRepair(toolId, e.target.value)}
+        />
+      )}
 
       <FormControlLabel
         control={
           <Checkbox
             id={idIrr}
             checked={st === "irreparable"}
-            onChange={() => onToggle(t.id, "irreparable")}
+            onChange={() => onToggle(toolId, "irreparable")}
           />
         }
         label="Irrecuperable"
@@ -315,6 +319,7 @@ const onSubmit = async (e) => { // maneja el envío del formulario
     </Box>
   );
 })}
+
       {!currentLoan.items?.length && (
         <Typography color="text.secondary">
           Este préstamo no tiene ítems.

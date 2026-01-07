@@ -29,6 +29,9 @@ public class SecurityConfig {
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/public/**").permitAll()
 
+                        .requestMatchers(HttpMethod.PUT, "/tool/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/tool/**").hasRole("ADMIN")
+
                         // el resto protegido
                         .anyRequest().authenticated()
                 )

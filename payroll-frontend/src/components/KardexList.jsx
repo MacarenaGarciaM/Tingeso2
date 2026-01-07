@@ -109,9 +109,9 @@ export default function KardexList() {
               <TableRow key={k.id}>
                 <TableCell>{k.movementDate}</TableCell>
                 <TableCell>{k.type}</TableCell>
-                <TableCell>{k.tool?.id}</TableCell>
-                <TableCell>{k.tool?.name}</TableCell>
-                <TableCell>{k.tool?.category}</TableCell>
+                <TableCell>{k.toolId}</TableCell>
+                <TableCell>{k.toolNameSnapshot}</TableCell>
+                <TableCell>{k.toolCategorySnapshot}</TableCell>
                 <TableCell align="right">{k.stock}</TableCell>
                 <TableCell>{k.rutUser}</TableCell>
               </TableRow>

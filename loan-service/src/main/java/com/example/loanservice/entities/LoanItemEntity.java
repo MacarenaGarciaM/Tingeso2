@@ -1,11 +1,12 @@
 package com.example.loanservice.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Table(
@@ -22,13 +23,21 @@ public class LoanItemEntity {
     private Long id;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "loan_id", nullable = false)
+
+    @ManyToOne
+    @JoinColumn(name = "loan_id")
     @JsonBackReference
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private LoanEntity loan;
 
     @Column(name = "tool_id", nullable = false)
     private Long toolId;
 
     private String toolNameSnapshot;
+
+
+
+
+
 }
