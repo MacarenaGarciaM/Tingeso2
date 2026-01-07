@@ -6,16 +6,17 @@ import "./index.css";
 import { ReactKeycloakProvider } from "@react-keycloak/web";
 import keycloak from "./services/keycloak";
 
-
 const root = createRoot(document.getElementById("root"));
 
 root.render(
   <ReactKeycloakProvider
     authClient={keycloak}
     initOptions={{
-      onLoad: "check-sso",                      
+      onLoad: "login-required", 
       pkceMethod: "S256",
-      silentCheckSsoRedirectUri: window.location.origin + "/silent-check-sso.html",
+      silentCheckSsoRedirectUri:
+        window.location.origin + "/silent-check-sso.html",
+      checkLoginIframe: false, // evita issues en local
     }}
     autoRefreshToken
     LoadingComponent={<div>Cargando login…</div>}
@@ -25,10 +26,3 @@ root.render(
 );
 
 if (import.meta.env.DEV) window.kc = keycloak;
-
-
-root.render(
-  <ReactKeycloakProvider authClient={keycloak} /* ... */>
-    <App />
-  </ReactKeycloakProvider>
-);

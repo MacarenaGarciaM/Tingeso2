@@ -5,6 +5,12 @@ spring:
   application:
     name: client-service
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KC_ISSUER:http://localhost:9090/realms/sisgr-realm}
+
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:5432/clientms
     username: postgres
@@ -27,6 +33,9 @@ eureka:
     service-url:
       defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
 
+
 services:
   loan:
     base-url: ${LOAN_URL:http://loan-service}
+
+

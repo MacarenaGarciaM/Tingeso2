@@ -12,7 +12,7 @@ export default function AuthProvisioner() {
     // Llamada inicial al entrar autenticado
     const provision = async () => {
       try {
-        await api.get("/auth/me");
+        await api.post("/users/me");
         provisionedOnce.current = true;
       } catch (e) {
         console.error("[auth/me] failed", e);

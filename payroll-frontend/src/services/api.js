@@ -1,23 +1,29 @@
+// src/services/api.js
 import axios from "axios";
 import keycloak from "./keycloak";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8080",
+  baseURL: import.meta.env.VITE_API_URL ?? "http://localhost:8080",
+  headers: { "Content-Type": "application/json" },
 });
 
-// agrega el Bearer token automáticamente (y refresca si está por expirar)
+// Adjunta token y lo refresca si expira pronto
 api.interceptors.request.use(async (config) => {
-  try {
-    if (keycloak?.token) {
-      // refresca si expira en < 30s
-      await keycloak.updateToken(30);
+  // Si keycloak aún no está inicializado, igual deja pasar (puede dar 401 en endpoints protegidos)
+  if (!keycloak) return config;
+
+  // Si hay token, refrescar si queda poco y agregar Authorization
+  if (keycloak.token) {
+    try {
+      await keycloak.updateToken(30); // refresh si expira en <30s
       config.headers.Authorization = `Bearer ${keycloak.token}`;
+    } catch (e) {
+      // No fuerces login acá si te molesta el redirect durante pruebas
+      // keycloak.login();
+      console.warn("[api] token refresh failed", e);
     }
-  } catch (e) {
-    // si no pudo refrescar, forzar login
-    // (opcional: comenta esto si te molesta que redirija)
-    keycloak.login();
   }
+
   return config;
 });
 

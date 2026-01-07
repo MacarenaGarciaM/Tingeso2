@@ -1,4 +1,4 @@
-package com.example.kardexservice.config;
+package com.example.settingservice.config;
 
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
